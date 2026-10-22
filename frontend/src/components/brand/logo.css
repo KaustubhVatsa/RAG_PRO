@@ -1,0 +1,178 @@
+.logo-mark {
+  color: var(--text);
+  flex: none;
+  overflow: visible;
+}
+.logo-node {
+  fill: var(--accent);
+}
+.logo-node-glow {
+  fill: var(--accent-glow);
+  opacity: 0;
+}
+
+.logo-lockup {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42em;
+  color: var(--text);
+  text-decoration: none;
+}
+.logo-word {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  font-variation-settings: "opsz" 36;
+  line-height: 1;
+  /* optical nudge: the serif's x-height sits low next to the round mark */
+  transform: translateY(-0.03em);
+}
+
+/* ---------------------------------------------------------------- draw-on animation
+   Ring draws (0-45%), check draws (35-70%), node pops + glows (65-85%), hold, then (when looping)
+   everything fades to restart. Stroke dash values are 0..1 thanks to pathLength=1. */
+.logo-mark.is-animated .logo-ring,
+.logo-mark.is-animated .logo-check {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+.logo-mark.is-animated .logo-ring {
+  animation: logo-draw 1.1s var(--ease-out) 0.05s forwards;
+}
+.logo-mark.is-animated .logo-check {
+  animation: logo-draw 0.7s var(--ease-out) 0.55s forwards;
+}
+.logo-mark.is-animated .logo-node {
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0);
+  animation: logo-pop 0.5s var(--ease-spring) 1.05s forwards;
+}
+.logo-mark.is-animated .logo-node-glow {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: logo-glow 1.4s var(--ease-out) 1.15s forwards;
+}
+
+.logo-mark.is-looping .logo-ring {
+  animation: logo-draw-loop 2.6s var(--ease-in-out) infinite;
+}
+.logo-mark.is-looping .logo-check {
+  animation: logo-check-loop 2.6s var(--ease-in-out) infinite;
+}
+.logo-mark.is-looping .logo-node {
+  animation: logo-node-loop 2.6s var(--ease-spring) infinite;
+}
+.logo-mark.is-looping .logo-node-glow {
+  animation: logo-glow-loop 2.6s var(--ease-out) infinite;
+}
+
+@keyframes logo-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes logo-pop {
+  to {
+    transform: scale(1);
+  }
+}
+@keyframes logo-glow {
+  0% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  40% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.6);
+  }
+}
+@keyframes logo-draw-loop {
+  0% {
+    stroke-dashoffset: 1;
+    opacity: 1;
+  }
+  40%,
+  85% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+@keyframes logo-check-loop {
+  0%,
+  25% {
+    stroke-dashoffset: 1;
+    opacity: 1;
+  }
+  55%,
+  85% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+@keyframes logo-node-loop {
+  0%,
+  50% {
+    transform: scale(0);
+  }
+  62%,
+  88% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+@keyframes logo-glow-loop {
+  0%,
+  55% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  68% {
+    opacity: 1;
+  }
+  90%,
+  100% {
+    opacity: 0;
+    transform: scale(1.7);
+  }
+}
+
+/* Reduced motion: show the finished mark, no drawing. */
+@media (prefers-reduced-motion: reduce) {
+  .logo-mark .logo-ring,
+  .logo-mark .logo-check {
+    stroke-dashoffset: 0 !important;
+    opacity: 1 !important;
+    animation: none !important;
+  }
+  .logo-mark .logo-node {
+    transform: none !important;
+    animation: none !important;
+  }
+  .logo-mark .logo-node-glow {
+    animation: none !important;
+  }
+}
+
+.logo-loader {
+  display: grid;
+  place-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-16) var(--sp-4);
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+  letter-spacing: 0.02em;
+}
