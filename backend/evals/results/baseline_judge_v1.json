@@ -1,0 +1,325 @@
+{
+  "label": "qwen_v1",
+  "kind": "judge",
+  "model": "qwen/qwen3.8-27b",
+  "n": 30,
+  "accuracy": 0.967,
+  "catch_rate": 1.0,
+  "false_alarm_rate": 0.1,
+  "no_verdict": 0,
+  "confusion": {
+    "supported": {
+      "supported": 9,
+      "contradicted": 1
+    },
+    "contradicted": {
+      "contradicted": 10
+    },
+    "unsupported": {
+      "unsupported": 10
+    }
+  },
+  "rows": [
+    {
+      "id": "s01",
+      "label": "supported",
+      "evidence": [
+        4
+      ],
+      "claim": "The base model runs eight attention heads in parallel.",
+      "predicted": "supported",
+      "reason": "The evidence explicitly states that the base model uses h=8 parallel attention heads."
+    },
+    {
+      "id": "s02",
+      "label": "supported",
+      "evidence": [
+        4
+      ],
+      "claim": "Each head works with 64-dimensional keys and values.",
+      "predicted": "supported",
+      "reason": "The evidence explicitly states that for each head, the dimensions are d_k = d_v = 64."
+    },
+    {
+      "id": "s03",
+      "label": "supported",
+      "evidence": [
+        2
+      ],
+      "claim": "The encoder and decoder each consist of six identical layers.",
+      "predicted": "supported",
+      "reason": "The evidence explicitly states that both the encoder and the decoder are a stack of N=6 identical layers."
+    },
+    {
+      "id": "s04",
+      "label": "supported",
+      "evidence": [
+        3
+      ],
+      "claim": "Dot products are divided by the square root of d_k before the softmax.",
+      "predicted": "supported",
+      "reason": "The evidence explicitly states that the dot product is divided by the square root of d_k and then a softmax is applied."
+    },
+    {
+      "id": "s05",
+      "label": "supported",
+      "evidence": [
+        9
+      ],
+      "claim": "The learning rate rises during the first 4000 steps and then falls.",
+      "predicted": "supported",
+      "reason": "The evidence states that the learning rate increases linearly for the first 4000 steps and then decays, which matches the claim that it rises and then falls."
+    },
+    {
+      "id": "s06",
+      "label": "supported",
+      "evidence": [
+        8
+      ],
+      "claim": "The base models trained for about half a day on 8 GPUs.",
+      "predicted": "contradicted",
+      "reason": "The evidence states the base models were trained for about 12 hours, which is not half a day (12 hours is a full day's worth of hours, but typically 'half a day' implies 6-12 hours depending on context, however 12 hours is explicitly stated and 'half a day' usually refers to 6 hours or is ambiguous, but more importantly, 12 hours is exactly half of 24 hours, so let's re-evaluate. Wait, 12 hours IS half a day. Let me re-read carefully. 'about 12 hours'. A day is 24 hours. Half a day is 12 hours. So the claim says 'about half a day'. The evidence says 'about 12 hours'. These are equivalent. Is there a contradiction? No. Is it supported? Yes. Let me check the GPU count. Evidence: '8 NVIDIA P100 GPUs'. Claim: '8 GPUs'. This matches. So the claim is supported. Why did I think contradicted? I must have misread 'half a day' as something else or confused it with the big models (3.5 days). Base models: 12 hours. 12 hours = 0.5 days. So 'about half a day' is accurate. Therefore, the verdict is supported."
+    },
+    {
+      "id": "s07",
+      "label": "supported",
+      "evidence": [
+        10
+      ],
+      "claim": "The big Transformer beat the earlier best English-to-German results by more than 2 BLEU.",
+      "predicted": "supported",
+      "reason": "The evidence states that the big Transformer improved over previous best results on English-to-German by over 2 BLEU."
+    },
+    {
+      "id": "s08",
+      "label": "supported",
+      "evidence": [
+        6
+      ],
+      "claim": "Token order information comes from sinusoidal functions added to the embeddings.",
+      "predicted": "supported",
+      "reason": "The evidence states that positional encodings, which are sine and cosine functions, are added to input embeddings to inject token order information."
+    },
+    {
+      "id": "s09",
+      "label": "supported",
+      "evidence": [
+        0
+      ],
+      "claim": "The Transformer does not use recurrence or convolutions.",
+      "predicted": "supported",
+      "reason": "The evidence states that the Transformer dispenses with recurrence and convolutions entirely."
+    },
+    {
+      "id": "s10",
+      "label": "supported",
+      "evidence": [
+        7
+      ],
+      "claim": "Self-attention connects every position with a constant number of sequential operations.",
+      "predicted": "supported",
+      "reason": "The evidence explicitly states that a self-attention layer connects all positions with a constant number of sequentially executed operations."
+    },
+    {
+      "id": "c01",
+      "label": "contradicted",
+      "evidence": [
+        4
+      ],
+      "claim": "The base model uses 16 attention heads.",
+      "predicted": "contradicted",
+      "reason": "The evidence explicitly states that the base model uses h=8 parallel attention heads, not 16."
+    },
+    {
+      "id": "c02",
+      "label": "contradicted",
+      "evidence": [
+        2
+      ],
+      "claim": "The encoder stack has 12 layers.",
+      "predicted": "contradicted",
+      "reason": "The evidence states that the encoder is a stack of N=6 identical layers, not 12."
+    },
+    {
+      "id": "c03",
+      "label": "contradicted",
+      "evidence": [
+        5
+      ],
+      "claim": "The feed-forward inner layer has dimensionality 1024.",
+      "predicted": "contradicted",
+      "reason": "The evidence states the inner layer has dimensionality d_ff=2048, not 1024."
+    },
+    {
+      "id": "c04",
+      "label": "contradicted",
+      "evidence": [
+        9
+      ],
+      "claim": "The optimizer was SGD with momentum.",
+      "predicted": "contradicted",
+      "reason": "The evidence states that the Adam optimizer was used, not SGD."
+    },
+    {
+      "id": "c05",
+      "label": "contradicted",
+      "evidence": [
+        8
+      ],
+      "claim": "The big models were trained for only 12 hours.",
+      "predicted": "contradicted",
+      "reason": "The evidence states that the big models were trained for about 3.5 days, not 12 hours."
+    },
+    {
+      "id": "c06",
+      "label": "contradicted",
+      "evidence": [
+        10
+      ],
+      "claim": "The big Transformer reached 31.2 BLEU on English-to-German.",
+      "predicted": "contradicted",
+      "reason": "The evidence states the big Transformer reached 28.4 BLEU on English-to-German, not 31.2."
+    },
+    {
+      "id": "c07",
+      "label": "contradicted",
+      "evidence": [
+        0
+      ],
+      "claim": "The Transformer relies mainly on recurrent layers.",
+      "predicted": "contradicted",
+      "reason": "The evidence states that the Transformer dispenses with recurrence entirely, which contradicts the claim that it relies mainly on recurrent layers."
+    },
+    {
+      "id": "c08",
+      "label": "contradicted",
+      "evidence": [
+        9
+      ],
+      "claim": "A dropout rate of 0.5 was applied.",
+      "predicted": "contradicted",
+      "reason": "The evidence states the residual dropout is 0.1, not 0.5."
+    },
+    {
+      "id": "c09",
+      "label": "contradicted",
+      "evidence": [
+        6
+      ],
+      "claim": "The model contains no information about token order at all.",
+      "predicted": "contradicted",
+      "reason": "The evidence states that information about token order is injected by adding positional encodings, which contradicts the claim that there is no such information."
+    },
+    {
+      "id": "c10",
+      "label": "contradicted",
+      "evidence": [
+        3
+      ],
+      "claim": "The scores are multiplied by the square root of d_k instead of divided.",
+      "predicted": "contradicted",
+      "reason": "The evidence states that the results are divided by the square root of d_k, not multiplied."
+    },
+    {
+      "id": "u01",
+      "label": "unsupported",
+      "evidence": [
+        4
+      ],
+      "claim": "The big model uses 16 attention heads.",
+      "predicted": "unsupported",
+      "reason": "The evidence only mentions the base model using 8 attention heads and does not provide information about a 'big model' or its number of attention heads."
+    },
+    {
+      "id": "u02",
+      "label": "unsupported",
+      "evidence": [
+        8
+      ],
+      "claim": "Training used mixed-precision arithmetic.",
+      "predicted": "unsupported",
+      "reason": "The evidence mentions the datasets, training steps, duration, and hardware, but does not mention mixed-precision arithmetic."
+    },
+    {
+      "id": "u03",
+      "label": "unsupported",
+      "evidence": [
+        10
+      ],
+      "claim": "The model was also evaluated on English-to-Czech translation.",
+      "predicted": "unsupported",
+      "reason": "The evidence only mentions English-to-German and English-to-French translation tasks, not English-to-Czech."
+    },
+    {
+      "id": "u04",
+      "label": "unsupported",
+      "evidence": [
+        9
+      ],
+      "claim": "The peak learning rate was 0.001.",
+      "predicted": "unsupported",
+      "reason": "The evidence describes the learning rate schedule (warmup and decay) but does not specify the peak learning rate value."
+    },
+    {
+      "id": "u05",
+      "label": "unsupported",
+      "evidence": [
+        2
+      ],
+      "claim": "Each layer was trained with a different learning rate.",
+      "predicted": "unsupported",
+      "reason": "The evidence describes the architecture of the layers but does not mention training details such as learning rates."
+    },
+    {
+      "id": "u06",
+      "label": "unsupported",
+      "evidence": [
+        5
+      ],
+      "claim": "The feed-forward network holds most of the model's parameters.",
+      "predicted": "unsupported",
+      "reason": "The evidence provides the dimensions of the feed-forward network but does not state or imply that it holds most of the model's parameters."
+    },
+    {
+      "id": "u07",
+      "label": "unsupported",
+      "evidence": [
+        8
+      ],
+      "claim": "The training data was filtered to remove duplicate sentence pairs.",
+      "predicted": "unsupported",
+      "reason": "The evidence mentions the datasets used but does not state whether duplicate sentence pairs were filtered or removed."
+    },
+    {
+      "id": "u08",
+      "label": "unsupported",
+      "evidence": [
+        3
+      ],
+      "claim": "Attention weights are visualised in Figure 3 of the paper.",
+      "predicted": "unsupported",
+      "reason": "The evidence describes the mathematical computation of attention but does not mention any figures or visualizations."
+    },
+    {
+      "id": "u09",
+      "label": "unsupported",
+      "evidence": [
+        0
+      ],
+      "claim": "The model was developed at Google Brain.",
+      "predicted": "unsupported",
+      "reason": "The evidence does not mention where the model was developed."
+    },
+    {
+      "id": "u10",
+      "label": "unsupported",
+      "evidence": [
+        1
+      ],
+      "claim": "Convolutional models need a number of operations that grows linearly with distance.",
+      "predicted": "unsupported",
+      "reason": "The evidence discusses recurrent and attention models but does not mention convolutional models or their computational complexity."
+    }
+  ],
+  "created_at": "2026-10-22T20:49:03.958649+00:00"
+}

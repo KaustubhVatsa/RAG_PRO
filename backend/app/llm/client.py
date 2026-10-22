@@ -5,6 +5,8 @@ from __future__ import annotations
 
 import hashlib
 import json
+import threading
+import time
 from collections.abc import Iterator
 from pathlib import Path
 
@@ -33,10 +35,31 @@ class DiskCache:
         (self.dir / f"{key}.json").write_text(json.dumps(value))
 
 
+class Throttle:
+    """Spaces calls at least 60/rpm seconds apart. Thread-safe: the claim judge runs several
+    calls at once, and they must share one budget."""
+
+    def __init__(self, rpm: int):
+        self.interval = 60.0 / rpm
+        self._lock = threading.Lock()
+        self._next = 0.0
+
+    def wait(self) -> None:
+        with self._lock:
+            now = time.monotonic()
+            start = max(now, self._next)
+            self._next = start + self.interval
+        if start > now:
+            time.sleep(start - now)
+
+
 class OpenAICompatLLM:
     def __init__(self, settings: Settings):
         self.settings = settings
         self._clients: dict[tuple, object] = {}
+        self._throttles = {
+            role: Throttle(rpm) for role in ("main", "fast", "judge") if (rpm := settings.rpm(role))
+        }
         self._cache = DiskCache(settings.data_dir / "llm_cache") if settings.llm_cache else None
 
     def _client(self, role: LLMRole):
@@ -55,6 +78,10 @@ class OpenAICompatLLM:
                 base_url=base_url, api_key=api_key or "ollama", max_retries=4, timeout=60
             )
         return self._clients[ident], model
+
+    def _pace(self, role: LLMRole) -> None:
+        if role in self._throttles:
+            self._throttles[role].wait()
 
     def _extra(self, role: LLMRole) -> dict:
         effort = self.settings.reasoning_effort(role)
@@ -82,6 +109,7 @@ class OpenAICompatLLM:
         kwargs: dict = self._extra(role)
         if json_mode:
             kwargs["response_format"] = {"type": "json_object"}
+        self._pace(role)  # after the cache check: cache hits cost no quota
         resp = client.chat.completions.create(
             model=model,
             messages=messages,
@@ -109,6 +137,7 @@ class OpenAICompatLLM:
         max_tokens: int = 1024,
     ) -> Iterator[str]:
         client, model = self._client(role)
+        self._pace(role)
         resp = client.chat.completions.create(
             model=model,
             messages=messages,
