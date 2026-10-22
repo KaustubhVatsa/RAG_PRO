@@ -56,8 +56,8 @@ class OpenAICompatLLM:
             )
         return self._clients[ident], model
 
-    def _extra(self) -> dict:
-        effort = self.settings.llm_reasoning_effort
+    def _extra(self, role: LLMRole) -> dict:
+        effort = self.settings.reasoning_effort(role)
         return {"reasoning_effort": effort} if effort else {}
 
     def complete(
@@ -79,7 +79,7 @@ class OpenAICompatLLM:
             if hit:
                 return LLMResult(**hit, cached=True)
 
-        kwargs: dict = self._extra()
+        kwargs: dict = self._extra(role)
         if json_mode:
             kwargs["response_format"] = {"type": "json_object"}
         resp = client.chat.completions.create(
@@ -115,7 +115,7 @@ class OpenAICompatLLM:
             temperature=temperature,
             max_tokens=max_tokens,
             stream=True,
-            **self._extra(),
+            **self._extra(role),
         )
         for event in resp:
             if event.choices and event.choices[0].delta.content:

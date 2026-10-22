@@ -4,7 +4,7 @@ from app.core.schemas import ChatRequest, ClaimsEvent, DoneEvent
 from app.dev.simple_retriever import SimpleRetriever
 from app.llm.mock import MockLLM
 from app.reasoning.agent import answer_stream
-from app.reasoning.citations import normalize, quote_in_chunk, split_evidence
+from app.reasoning.citations import extract_markers, normalize, quote_in_chunk, split_evidence
 
 CHUNK = "The base model uses h=8 parallel attention heads.\nFor each head d_k = d_v = 64."
 
@@ -60,3 +60,12 @@ def test_fabricated_quote_is_flagged_and_claim_marked_unsupported(store, demo_id
     assert "sixteen" not in cite.quote  # we never show the fabricated quote as if it were evidence
     claims = next(e for e in events if isinstance(e, ClaimsEvent)).claims
     assert claims[0].status == "unsupported" and "verbatim" in (claims[0].note or "")
+
+
+def test_fullwidth_citation_markers_are_normalised():
+    # gpt-oss writes 【1】 / 【1†L5-L9】 instead of [1]; we must still see the citation.
+    text, quotes = split_evidence(
+        'It uses eight heads【1】 and 64 dims【2†L3-L4】.\n\nEvidence:\n【1】 "uses h=8"'
+    )
+    assert text == "It uses eight heads[1] and 64 dims[2]."
+    assert extract_markers(text) == [1, 2]
