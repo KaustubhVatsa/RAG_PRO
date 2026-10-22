@@ -81,3 +81,21 @@ def test_unparseable_judge_leaves_the_claim_unverified():
     llm = ScriptedLLM("nope", "nope")
     claims = verify_claims("It uses 8 heads [1].", [_cite(True)], _chunks(), llm)
     assert claims[0].status == "unverified"
+
+
+def test_citation_after_the_period_stays_with_its_sentence():
+    # Real bug: "…28.4. [1]" was split into "…28.4." (no citation) and "[1]" (empty claim),
+    # which got judged 'unsupported' and made a correct answer look 0% confident.
+    from app.reasoning.verifier import split_claims
+
+    assert split_claims("It scored 28.4. [1] It also won. [2]") == [
+        "It scored 28.4. [1]",
+        "It also won. [2]",
+    ]
+
+
+def test_marker_only_fragments_are_not_judged_as_claims():
+    llm = ScriptedLLM(GOOD)
+    claims = verify_claims("It uses 8 heads. [1]", [_cite(True)], _chunks(), llm)
+    assert len(claims) == 1 and claims[0].status == "supported"
+    assert len(llm.calls) == 1  # one real claim -> one judge call, not two

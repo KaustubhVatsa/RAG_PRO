@@ -36,13 +36,17 @@ class Settings(BaseSettings):
     llm_fast_model: str = "openai/gpt-oss-20b"
     llm_judge_base_url: str | None = None
     llm_judge_api_key: str | None = None
-    llm_judge_model: str = "gemini-2.5-flash"
+    llm_judge_model: str = "qwen/qwen3.8-27b"
     # For 'thinking' models (gpt-oss, Gemini 2.5): low|medium|high (Gemini also 'none'). Thinking
     # tokens count against max_tokens, so leaving this unset can yield an EMPTY reply. Per role,
     # because non-thinking models reject the parameter. Leave unset for those.
     llm_main_reasoning_effort: str | None = None
     llm_fast_reasoning_effort: str | None = None
     llm_judge_reasoning_effort: str | None = None
+    # Optional pacing (requests/minute) per role, to stay under free-tier limits. None = no limit.
+    llm_main_rpm: int | None = None
+    llm_fast_rpm: int | None = None
+    llm_judge_rpm: int | None = None
     llm_cache: bool = False  # disk-cache completions: saves free-tier quota during evals
 
     # --- app
@@ -50,6 +54,9 @@ class Settings(BaseSettings):
     top_k: int = 6
     max_upload_mb: int = 25
     cors_origins: str = "http://localhost:5173"
+
+    def rpm(self, role: LLMRole) -> int | None:
+        return getattr(self, f"llm_{role}_rpm")
 
     def reasoning_effort(self, role: LLMRole) -> str | None:
         return getattr(self, f"llm_{role}_reasoning_effort")

@@ -8,9 +8,9 @@ provider is only `.env` changes (`LLM_BASE_URL`, `LLM_API_KEY`, `LLM_*_MODEL`). 
 
 | Provider | Open-weight models | `LLM_BASE_URL` | Notes |
 |---|---|---|---|
-| **Groq** | Llama 3.x family, others | `https://api.groq.com/openai/v1` | Very fast, free tier with per-minute/day token limits. Best default for `main` + `fast`. |
+| **Groq** | gpt-oss, Qwen (Llama has rotated out; run the `/models` call in `.env.example` for the current list) | `https://api.groq.com/openai/v1` | Very fast, free tier with per-minute/day token limits. Best default for `main` + `fast`. |
 | **OpenRouter** | many models with a `:free` variant (Llama, Qwen, DeepSeek, Gemma...) | `https://openrouter.ai/api/v1` | One key, many models; free variants are rate-limited and sometimes unavailable. Good for a *different-family judge*. |
-| **Google AI Studio** | Gemma (open); Gemini (not open weights) | `https://generativelanguage.googleapis.com/v1beta/openai/` | Generous free tier. Gemini is not open-source but is free and a different family, handy as the judge. |
+| **Google AI Studio** (free tier is tiny: Gemini 2.5 Flash allowed only **20 requests/day** when we tested; fine for a demo, useless for evals) | Gemma (open); Gemini (not open weights) | `https://generativelanguage.googleapis.com/v1beta/openai/` | Gemini is not open-source. Handy for quick demos, but too few requests per day for evals. |
 | **Cerebras** | Llama family | `https://api.cerebras.ai/v1` | Free tier, very fast. |
 | **Ollama (local)** | Llama, Qwen, Mistral, Gemma... | `http://localhost:11434/v1` | Fully free and offline, limited by your laptop (7-8B models run fine on 16 GB). No key needed. Great for development without quota worries. |
 

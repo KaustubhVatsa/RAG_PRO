@@ -19,3 +19,15 @@ def test_disk_cache_roundtrip(tmp_path):
     assert cache.get(key) is None
     cache.put(key, {"text": "yo", "model": "m"})
     assert cache.get(key)["text"] == "yo"
+
+
+def test_throttle_spaces_calls_apart():
+    import time
+
+    from app.llm.client import Throttle
+
+    t = Throttle(rpm=600)  # 0.1 s between calls
+    start = time.monotonic()
+    for _ in range(4):
+        t.wait()
+    assert time.monotonic() - start >= 0.28  # 3 gaps of ~0.1 s (the first call is free)

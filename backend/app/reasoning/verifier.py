@@ -21,12 +21,15 @@ from app.core.schemas import Citation, Claim, ScoredChunk
 from app.reasoning.citations import extract_markers
 from app.reasoning.judge import judge_claim
 
-_SENTENCE = re.compile(r"(?<=[.!?])\s+")
+# One sentence = text up to . ! or ?, PLUS any citation markers right after it. Models often write
+# "…translation. [1]" and that [1] belongs to the sentence before it. A "." inside "28.4" is not
+# a sentence end because a real end is followed by whitespace or the end of the text.
+_SENTENCE = re.compile(r".+?[.!?](?:\s*\[\d+\])*(?=\s|$)|.+$", re.S)
 _MARKER = re.compile(r"\s*\[\d+\]")
 
 
 def split_claims(text: str) -> list[str]:
-    return [s.strip() for s in _SENTENCE.split(text) if s.strip()]
+    return [m.group().strip() for m in _SENTENCE.finditer(text) if m.group().strip()]
 
 
 def strip_markers(sentence: str) -> str:
@@ -64,7 +67,8 @@ def verify_claims(
             text=sentence, status=verdict.status, evidence=evidence, note=verdict.reason or None
         )
 
-    sentences = split_claims(answer_text)
+    # drop fragments with no words once citation markers are removed (nothing to judge)
+    sentences = [s for s in split_claims(answer_text) if re.search(r"\w", strip_markers(s))]
     # One judge call per sentence; they are independent network waits, so run them side by side.
     with ThreadPoolExecutor(max_workers=4) as pool:
         return list(pool.map(check, sentences))
