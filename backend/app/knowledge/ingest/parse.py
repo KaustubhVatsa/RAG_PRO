@@ -17,7 +17,7 @@ from __future__ import annotations
 import re
 from collections import Counter, defaultdict
 
-import fitz
+import pymupdf
 
 from app.knowledge.ingest.types import Block, ParsedDoc, ParsedPage
 
@@ -28,6 +28,48 @@ def _normalized_text(text: str) -> str:
     return " ".join(text.casefold().split())
 
 
+def _is_page_number(text: str) -> bool:
+    compact = re.sub(r"\s+", "", text).strip("|:.-")
+    return bool(_PAGE_NUMBER.fullmatch(compact))
+
+
+def _edge_text_key(text: str) -> str:
+    normalized = re.sub(r"\bp\s*a\s*g\s*e\b", "page", _normalized_text(text))
+    normalized = re.sub(
+        r"^(?:page\s*)?\d+(?:\s*(?:of|/)\s*\d+)?[\s|:.-]*",
+        "",
+        normalized,
+        flags=re.IGNORECASE,
+    )
+    return re.sub(
+        r"[\s|:.-]*(?:page\s*)?\d+(?:\s*(?:of|/)\s*\d+)?$",
+        "",
+        normalized,
+        flags=re.IGNORECASE,
+    )
+
+
+def _is_usable_metadata_title(title: str) -> bool:
+    lowered = title.casefold()
+    return (
+        bool(title)
+        and len(title) <= 160
+        and not lowered.startswith("arxiv:")
+        and "@" not in title
+        and "http://" not in lowered
+        and "https://" not in lowered
+    )
+
+
+def _title_from_first_page(records: list[dict], filename: str) -> str:
+    for record in sorted(records, key=lambda item: item["font_size"] or 0, reverse=True):
+        candidate = record["text"].split("|", maxsplit=1)[0].strip()
+        candidate = re.sub(r"\s+\+?\d[\d\s().-]{6,}$", "", candidate).strip()
+        if _is_usable_metadata_title(candidate):
+            return candidate
+    return filename
+
+
 def _extract_text_block(raw_block: dict) -> dict | None:
     if raw_block.get("type", 0) != 0:
         return None
@@ -35,10 +77,10 @@ def _extract_text_block(raw_block: dict) -> dict | None:
     lines: list[str] = []
     spans: list[dict] = []
     for line in raw_block.get("lines", []):
-        line_spans = [span for span in line.get("spans", []) if span.get("text", "").strip()]
+        line_spans = [span for span in line.get("spans", []) if span.get("text", "")]
         if line_spans:
             lines.append("".join(span.get("text", "") for span in line_spans).strip())
-            spans.extend(line_spans)
+            spans.extend(span for span in line_spans if span.get("text", "").strip())
 
     text = " ".join(line for line in lines if line).strip()
     if not text:
@@ -61,7 +103,7 @@ def _extract_text_block(raw_block: dict) -> dict | None:
 
 def parse_pdf(pdf_bytes: bytes, filename: str = "document.pdf") -> ParsedDoc:
     try:
-        document = fitz.open(stream=pdf_bytes, filetype="pdf")
+        document = pymupdf.open(stream=pdf_bytes, filetype="pdf")
     except Exception as exc:
         raise ValueError(f"Could not read PDF '{filename}': {exc}") from exc
 
@@ -104,9 +146,9 @@ def parse_pdf(pdf_bytes: bytes, filename: str = "document.pdf") -> ParsedDoc:
                 if bbox is None:
                     continue
                 at_edge = bbox[1] <= page_height * 0.06 or bbox[3] >= page_height * 0.94
-                normalized = _normalized_text(record["text"])
-                if at_edge and normalized and not _PAGE_NUMBER.fullmatch(normalized):
-                    edge_occurrences[normalized].add(page_index)
+                edge_key = _edge_text_key(record["text"])
+                if at_edge and edge_key and not _is_page_number(record["text"]):
+                    edge_occurrences[edge_key].add(page_index)
 
         repeated_edge_text = {text for text, pages in edge_occurrences.items() if len(pages) >= 2}
 
@@ -114,15 +156,13 @@ def parse_pdf(pdf_bytes: bytes, filename: str = "document.pdf") -> ParsedDoc:
         for page_index, records in enumerate(page_records):
             blocks: list[Block] = []
             for record in records:
-                normalized = _normalized_text(record["text"])
+                edge_key = _edge_text_key(record["text"])
                 bbox = record["bbox"]
                 at_edge = bbox is not None and (
                     bbox[1] <= page_heights[page_index] * 0.06
                     or bbox[3] >= page_heights[page_index] * 0.94
                 )
-                if at_edge and (
-                    normalized in repeated_edge_text or _PAGE_NUMBER.fullmatch(normalized)
-                ):
+                if at_edge and (edge_key in repeated_edge_text or _is_page_number(record["text"])):
                     continue
 
                 font_size = record["font_size"]
@@ -142,15 +182,10 @@ def parse_pdf(pdf_bytes: bytes, filename: str = "document.pdf") -> ParsedDoc:
             parsed_pages.append(ParsedPage(page=page_index + 1, blocks=blocks))
 
         metadata_title = ((document.metadata or {}).get("title") or "").strip()
-        if metadata_title:
+        if _is_usable_metadata_title(metadata_title):
             title = metadata_title
         else:
-            title_record = max(
-                page_records[0],
-                key=lambda record: record["font_size"] or 0,
-                default=None,
-            )
-            title = title_record["text"] if title_record else filename
+            title = _title_from_first_page(page_records[0], filename)
 
         return ParsedDoc(title=title or filename, pages=parsed_pages)
     finally:
