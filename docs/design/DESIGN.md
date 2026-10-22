@@ -5,7 +5,7 @@ quote, each claim is checked, and when the paper doesn't say, Verity says so. Th
 make that checkable, and it should feel calm, precise and a little magical. The look we are after is
 a scholar's reading lamp over good paper: warm light on ink.
 
-![Home, dark](screens/home-dark.png)
+![Home, dark](screens/home-dark.webp)
 
 ## 1. References: what we took, and what we left
 
@@ -105,7 +105,7 @@ answer is running.
 
 ## 6. Logo
 
-![Logo](screens/logo.png)
+![Logo](screens/logo.webp)
 
 **Concept: lens + check + evidence node.** An open ring (a lens: "look closely") holds a check mark
 ("verified"). The check's long stroke leaves the lens through a gap and lands on a single amber
@@ -197,5 +197,21 @@ a router (four routes, hash-based, ~30 lines), a chart library (four small SVG c
 markdown library (the small safe renderer is easier to audit).
 
 Bundle (production build, gzipped): the initial JS is about 70 KB, plus CSS at about 16 KB. Lazy
-chunks: the 3D scene is about 240 KB, the PDF viewer about 108 KB (plus its worker, fetched only for
+chunks: the 3D scene is about 224 KB, the PDF viewer about 108 KB (plus its worker, fetched only for
 documents with a stored PDF), the eval dashboard about 3 KB and the Lab about 6 KB.
+
+## 11. Screens (headless Chrome, mock backend)
+
+| | |
+|---|---|
+| ![Home light](screens/home-light.webp) | ![Workspace dark](screens/workspace-dark.webp) |
+| Home, light | Workspace with a finished answer and a claim popover, dark |
+| ![Workspace PDF](screens/workspace-light-pdf.webp) | ![Eval empty](screens/eval-empty-dark.webp) |
+| Source tab: PDF page with the quote highlighted via the text layer | Eval dashboard, empty state |
+| ![Lab](screens/lab-light.webp) | ![Claims](screens/lab-claims.webp) |
+| Design Lab | All citation and claim states, both themes |
+| ![Constellation](screens/constellation-3d-and-fallback.webp) | ![Mobile](screens/mobile-workspace-dark.webp) |
+| WebGL scene (SwiftShader) and SVG fallbacks | Mobile workspace (390×844) |
+
+Regenerate them by running the backend in mock mode and `npm run dev`, then taking headless Chrome
+screenshots at 1440×900 and 390×844 with `prefers-color-scheme` set to light and to dark.

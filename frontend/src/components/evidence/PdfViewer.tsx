@@ -91,7 +91,7 @@ export default function PdfViewer({
 
       setFound(quote ? highlight(layer.textDivs, layer.textContentItemsStr, quote) : null);
       setRendering(false);
-      textDiv.querySelector(".pdf-hl")?.scrollIntoView({ block: "center", behavior: "smooth" });
+      textDiv.querySelector(".pdf-hl")?.scrollIntoView({ block: "nearest", behavior: "smooth" });
     };
 
     draw().catch((e: unknown) => {

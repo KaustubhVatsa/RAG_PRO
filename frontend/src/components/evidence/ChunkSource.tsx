@@ -29,7 +29,7 @@ export function ChunkSource({ docId, page, chunkId, quote }: { docId: string; pa
   // Bring the highlighted quote into view once rendered.
   useEffect(() => {
     if (state.status !== "ok") return;
-    document.querySelector(".chunk-source mark")?.scrollIntoView({ block: "center", behavior: "smooth" });
+    document.querySelector(".chunk-source mark")?.scrollIntoView({ block: "nearest", behavior: "smooth" });
   }, [state, quote]);
 
   if (state.status === "loading") return <Skeleton lines={6} className="chunk-skeleton" />;
