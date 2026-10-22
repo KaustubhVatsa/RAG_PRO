@@ -1,0 +1,181 @@
+openapi: 3.1.0
+info:
+  title: Verity API
+  version: 0.1.0
+  description: |
+    Contract between the frontend and the backend. The Pydantic models in
+    backend/app/core/schemas.py are the source of truth; the TypeScript types in
+    frontend/src/api/types.ts mirror them. FastAPI also serves a live schema at /openapi.json.
+    Changes here need both owners' approval (CODEOWNERS).
+servers:
+  - url: http://localhost:8000
+paths:
+  /api/health:
+    get:
+      summary: Liveness + which implementations are active (store/retriever/ingestor/llm_provider)
+      responses: { "200": { description: ok } }
+  /api/documents:
+    get:
+      summary: List documents (newest first)
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: "#/components/schemas/Document" } }
+    post:
+      summary: Upload a PDF. Returns immediately with status=processing; poll GET /api/documents/{id} until ready|failed.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties: { file: { type: string, format: binary } }
+      responses:
+        "202": { description: accepted, content: { application/json: { schema: { $ref: "#/components/schemas/Document" } } } }
+        "400": { description: not a PDF }
+        "413": { description: too large }
+  /api/documents/{id}:
+    parameters: [{ name: id, in: path, required: true, schema: { type: string } }]
+    get:
+      summary: One document (poll this for processing status)
+      responses:
+        "200": { description: ok, content: { application/json: { schema: { $ref: "#/components/schemas/Document" } } } }
+        "404": { description: not found }
+    delete:
+      summary: Delete the document, its chunks and its stored file
+      responses: { "204": { description: deleted } }
+  /api/documents/{id}/file:
+    parameters: [{ name: id, in: path, required: true, schema: { type: string } }]
+    get:
+      summary: Original PDF bytes (for the in-browser viewer). 404 for the built-in demo document.
+      responses: { "200": { description: application/pdf }, "404": { description: no stored file } }
+  /api/documents/{id}/chunks:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: string } }
+      - { name: page, in: query, required: true, schema: { type: integer, minimum: 1 } }
+    get:
+      summary: Chunks on a page (to highlight cited passages)
+      responses:
+        "200": { description: ok, content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/Chunk" } } } } }
+  /api/chat:
+    post:
+      summary: Ask a question. Response is a Server-Sent Events stream.
+      description: |
+        Event order: `retrieval` (once) -> `token`* -> `claims` (optional) -> `done`.
+        On failure an `error` event is sent and the stream ends. Each SSE frame is
+        `event: <type>` + `data: <json of that event>`. 409 if any doc is not ready.
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/ChatRequest" } } }
+      responses:
+        "200":
+          description: SSE stream
+          content:
+            text/event-stream:
+              schema: { $ref: "#/components/schemas/ChatEvent" }
+        "409": { description: a document is not ready }
+        "422": { description: no documents selected }
+  /api/eval/latest:
+    get:
+      summary: Newest eval result file for the dashboard ({} if none)
+      parameters: [{ name: kind, in: query, schema: { type: string, enum: [retrieval, answer], default: retrieval } }]
+      responses: { "200": { description: ok } }
+
+components:
+  schemas:
+    Document:
+      type: object
+      required: [id, title, filename, status, n_pages, n_chunks, created_at]
+      properties:
+        id: { type: string }
+        title: { type: string }
+        filename: { type: string }
+        status: { type: string, enum: [processing, ready, failed] }
+        n_pages: { type: integer }
+        n_chunks: { type: integer }
+        error: { type: [string, "null"] }
+        created_at: { type: string, format: date-time }
+    Chunk:
+      type: object
+      required: [id, doc_id, ord, page, text]
+      properties:
+        id: { type: string }
+        doc_id: { type: string }
+        ord: { type: integer }
+        page: { type: integer, description: 1-based }
+        section: { type: [string, "null"] }
+        text: { type: string }
+    ScoredChunk:
+      type: object
+      required: [chunk, score, source]
+      properties:
+        chunk: { $ref: "#/components/schemas/Chunk" }
+        score: { type: number }
+        source: { type: string, enum: [vector, bm25, hybrid, rerank] }
+    Citation:
+      type: object
+      required: [n, chunk_id, doc_id, page, quote]
+      properties:
+        n: { type: integer, description: the [n] marker in the answer text }
+        chunk_id: { type: string }
+        doc_id: { type: string }
+        page: { type: integer }
+        quote: { type: string }
+    Claim:
+      type: object
+      required: [text, status, evidence]
+      properties:
+        text: { type: string }
+        status: { type: string, enum: [supported, unsupported, contradicted, unverified] }
+        evidence: { type: array, items: { $ref: "#/components/schemas/Citation" } }
+        note: { type: [string, "null"] }
+    Answer:
+      type: object
+      required: [text, citations, claims, abstained, mode]
+      properties:
+        text: { type: string }
+        citations: { type: array, items: { $ref: "#/components/schemas/Citation" } }
+        claims: { type: array, items: { $ref: "#/components/schemas/Claim" } }
+        abstained: { type: boolean }
+        abstain_reason: { type: [string, "null"] }
+        confidence: { type: [number, "null"], minimum: 0, maximum: 1 }
+        mode: { type: string, enum: [answer, teacher, factcheck] }
+    ChatRequest:
+      type: object
+      required: [question, doc_ids]
+      properties:
+        question: { type: string, description: "in factcheck mode: the statement to check" }
+        doc_ids: { type: array, items: { type: string }, minItems: 1 }
+        mode: { type: string, enum: [answer, teacher, factcheck], default: answer }
+        history:
+          type: array
+          items:
+            type: object
+            required: [role, content]
+            properties:
+              role: { type: string, enum: [user, assistant] }
+              content: { type: string }
+    ChatEvent:
+      oneOf:
+        - type: object
+          required: [type, chunks]
+          properties:
+            type: { const: retrieval }
+            chunks: { type: array, items: { $ref: "#/components/schemas/ScoredChunk" } }
+        - type: object
+          required: [type, text]
+          properties: { type: { const: token }, text: { type: string } }
+        - type: object
+          required: [type, claims]
+          properties:
+            type: { const: claims }
+            claims: { type: array, items: { $ref: "#/components/schemas/Claim" } }
+        - type: object
+          required: [type, answer]
+          properties: { type: { const: done }, answer: { $ref: "#/components/schemas/Answer" } }
+        - type: object
+          required: [type, message]
+          properties: { type: { const: error }, message: { type: string } }

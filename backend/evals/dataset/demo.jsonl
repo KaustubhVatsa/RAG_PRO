@@ -1,0 +1,7 @@
+{"id": "d1", "doc_id": "demo-attention", "type": "answerable", "question": "How many attention heads does the base Transformer use?", "gold_answer": "8", "gold_pages": [5]}
+{"id": "d2", "doc_id": "demo-attention", "type": "answerable", "question": "Why are dot products scaled by the square root of d_k?", "gold_answer": "Large dot products push the softmax into regions with extremely small gradients.", "gold_pages": [4]}
+{"id": "d3", "doc_id": "demo-attention", "type": "multihop", "question": "What is the per-head key dimension and how is it derived?", "gold_answer": "64, computed as d_model / h = 512 / 8.", "gold_pages": [5]}
+{"id": "d4", "doc_id": "demo-attention", "type": "answerable", "question": "What BLEU score did the big model reach on English-to-German translation?", "gold_answer": "28.4", "gold_pages": [8]}
+{"id": "d5", "doc_id": "demo-attention", "type": "unanswerable", "question": "Which dataset was used for the image classification experiments?", "gold_answer": null, "gold_pages": []}
+{"id": "d6", "doc_id": "demo-attention", "type": "unanswerable", "question": "What was the carbon footprint of training the model?", "gold_answer": null, "gold_pages": []}
+{"id": "d7", "doc_id": "demo-attention", "type": "false_premise", "question": "Why did the Transformer use LSTM layers in its encoder?", "gold_answer": "It did not: the model dispenses with recurrence and uses only attention.", "gold_pages": [1]}

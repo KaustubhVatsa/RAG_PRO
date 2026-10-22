@@ -1,0 +1,20 @@
+# Replace the placeholders with real GitHub usernames after you push.
+# YOU     = frontend + API + reasoning (answering, verification, answer evals)
+# PARTNER = knowledge layer (ingestion, storage, retrieval, retrieval evals)
+
+/frontend/                                @YOU
+/backend/app/api/                         @YOU
+/backend/app/reasoning/                   @YOU
+/backend/evals/answer_eval.py             @YOU
+/backend/tests/test_agent.py              @YOU
+/backend/tests/test_api.py                @YOU
+
+/backend/app/knowledge/                   @PARTNER
+/backend/tests/knowledge/                 @PARTNER
+/backend/evals/retrieval_eval.py          @PARTNER
+/backend/evals/metrics.py                 @PARTNER
+
+# FROZEN CONTRACTS: changes need BOTH owners to approve
+/backend/app/core/                        @YOU @PARTNER
+/contracts/                               @YOU @PARTNER
+/backend/evals/dataset/                   @YOU @PARTNER
