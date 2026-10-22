@@ -43,6 +43,8 @@ class MockLLM:
         max_tokens: int = 1024,
         json_mode: bool = False,
     ) -> LLMResult:
+        if role == "judge":  # a well-behaved judge: always agrees (offline demo only)
+            return LLMResult(text='{"verdict": "supported", "reason": "mock judge"}', model="mock")
         text = '{"claims": []}' if json_mode else _ANSWER
         return LLMResult(text=text, model="mock")
 

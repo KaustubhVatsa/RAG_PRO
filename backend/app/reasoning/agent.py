@@ -75,7 +75,7 @@ def answer_stream(
 
     abstained = text.startswith(ABSTAIN_TEXT[:20])
     citations = [] if abstained else build_citations(text, quotes, chunks)
-    claims = [] if abstained else verify_claims(text, citations, llm)
+    claims = [] if abstained else verify_claims(text, citations, chunks, llm)
     if claims:
         yield ClaimsEvent(claims=claims)
     yield DoneEvent(
