@@ -126,7 +126,10 @@ export default function App() {
               {t.answer && t.answer.citations.length > 0 && (
                 <div className="cites">
                   {t.answer.citations.map((c) => (
-                    <span key={c.n} className="cite" title={c.quote}>[{c.n}] p.{c.page}</span>
+                    <span key={c.n} className={`cite ${c.verified === false ? "bad" : ""}`}
+                      title={c.verified === false ? "Quote not found in source" : c.quote}>
+                      [{c.n}] p.{c.page}{c.verified === true ? " ✓" : c.verified === false ? " ✗" : ""}
+                    </span>
                   ))}
                 </div>
               )}

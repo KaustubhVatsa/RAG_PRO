@@ -5,6 +5,7 @@ from __future__ import annotations
 from app.core.schemas import ChatMode, ScoredChunk
 
 ABSTAIN_TEXT = "I can't find this in the provided document(s)."
+EVIDENCE_MARKER = "Evidence:"
 
 _GROUNDING = f"""You are Verity, a careful assistant that answers strictly from the numbered excerpts of the user's documents.
 
@@ -13,6 +14,10 @@ Rules:
 - Put the excerpt number in square brackets after every factual sentence, like [1] or [2][3].
 - If the excerpts do not contain the answer, reply with exactly: {ABSTAIN_TEXT}
 - If the question contains a false premise, say so and cite what the document actually says.
+
+After your answer, add a line that says exactly "{EVIDENCE_MARKER}" and then one line per excerpt you cited, in this exact format:
+[n] "a short phrase copied WORD FOR WORD from excerpt n"
+Copy the phrase exactly as written in the excerpt. Do not paraphrase, shorten with "...", or fix typos. Your quotes are checked by a program against the source text.
 """
 
 _MODE = {

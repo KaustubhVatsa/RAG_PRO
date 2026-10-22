@@ -21,10 +21,12 @@ def test_event_order_and_final_answer(store, demo_id):
     assert all(c.page >= 1 for c in done.answer.citations)
 
 
-def test_streamed_tokens_reassemble_to_answer_text(store, demo_id):
+def test_streamed_tokens_start_with_the_final_answer_text(store, demo_id):
+    # The raw stream also carries the trailing "Evidence:" block; the final answer drops it.
     events = _run(store, demo_id, "scaled dot-product attention")
     streamed = "".join(e.text for e in events if isinstance(e, TokenEvent)).strip()
-    assert streamed == events[-1].answer.text
+    final = events[-1].answer.text
+    assert streamed.startswith(final) and "Evidence:" not in final
 
 
 def test_no_retrieval_hits_means_abstain(store, demo_id):
@@ -40,6 +42,6 @@ def test_retrieval_event_never_leaks_embeddings(store, demo_id):
 
 def test_invented_citation_numbers_are_dropped(store, demo_id):
     chunks = SimpleRetriever(store).retrieve("attention", [demo_id], k=2)
-    cites = build_citations("Real [1]. Invented [9].", chunks)
+    cites = build_citations("Real [1]. Invented [9].", {}, chunks)
     assert [c.n for c in cites] == [1]
     assert extract_markers("a [2][3] b [2]") == [2, 3]

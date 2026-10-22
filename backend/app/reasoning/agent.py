@@ -1,11 +1,12 @@
 """The answering agent.  v0 = naive RAG with citations (the BASELINE for the answer eval).
 
-    retrieve -> build grounded prompt -> stream answer -> parse citations -> verify claims -> Answer
+    retrieve -> build grounded prompt -> stream answer -> split off quotes -> check quotes
+    -> verify claims -> Answer
 
 TODO(reasoning) roadmap (each step becomes a row in the ablation table):
   1. query rewrite / decomposition with the 'fast' model (multi-hop questions)
   2. sufficiency check + re-retrieve loop (the genuinely 'agentic' part, max 3 rounds)
-  3. quote-then-answer + verbatim check, claim verifier, calibrated abstention
+  3. claim verifier with a judge model, calibrated abstention
   4. conversation memory (use req.history when rewriting the query)
 """
 
@@ -24,7 +25,7 @@ from app.core.schemas import (
     ScoredChunk,
     TokenEvent,
 )
-from app.reasoning.citations import build_citations
+from app.reasoning.citations import build_citations, split_evidence
 from app.reasoning.prompts import ABSTAIN_TEXT, format_context, system_prompt
 from app.reasoning.verifier import verify_claims
 
@@ -64,13 +65,16 @@ def answer_stream(
     )
 
     parts: list[str] = []
-    for token in llm.stream(messages, role="main", max_tokens=700):
+    for token in llm.stream(messages, role="main", max_tokens=1200):
         parts.append(token)
         yield TokenEvent(text=token)
-    text = "".join(parts).strip()
+    raw = "".join(parts).strip()
+
+    # The model ends with an "Evidence:" block of exact quotes; peel it off the visible answer.
+    text, quotes = split_evidence(raw)
 
     abstained = text.startswith(ABSTAIN_TEXT[:20])
-    citations = [] if abstained else build_citations(text, chunks)
+    citations = [] if abstained else build_citations(text, quotes, chunks)
     claims = [] if abstained else verify_claims(text, citations, llm)
     if claims:
         yield ClaimsEvent(claims=claims)

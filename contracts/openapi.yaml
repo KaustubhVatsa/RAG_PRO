@@ -124,6 +124,7 @@ components:
         doc_id: { type: string }
         page: { type: integer }
         quote: { type: string }
+        verified: { type: [boolean, "null"], description: "true = quote found verbatim in the chunk; false = not found; null = model gave no quote" }
     Claim:
       type: object
       required: [text, status, evidence]

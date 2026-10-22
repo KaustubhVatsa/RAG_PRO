@@ -37,6 +37,9 @@ class Settings(BaseSettings):
     llm_judge_base_url: str | None = None
     llm_judge_api_key: str | None = None
     llm_judge_model: str = "gemini-2.5-flash"
+    # for 'thinking' models (e.g. Gemini 2.5): none|low|medium|high. Thinking tokens count against
+    # max_tokens, so leaving this unset can yield an EMPTY reply when max_tokens is small.
+    llm_reasoning_effort: str | None = None
     llm_cache: bool = False  # disk-cache completions: saves free-tier quota during evals
 
     # --- app
