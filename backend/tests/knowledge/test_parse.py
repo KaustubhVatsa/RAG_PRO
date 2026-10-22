@@ -6,10 +6,6 @@ fitz = pytest.importorskip("fitz")  # install with: pip install -e ".[knowledge]
 
 from app.knowledge.ingest.parse import parse_pdf  # noqa: E402
 
-pytestmark = pytest.mark.xfail(
-    raises=NotImplementedError, reason="P2 not implemented", strict=False
-)
-
 
 def _make_pdf() -> bytes:
     doc = fitz.open()
