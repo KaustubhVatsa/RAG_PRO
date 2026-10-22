@@ -114,14 +114,16 @@ export function readSceneColors(el: Element): SceneColors {
   const cs = getComputedStyle(el);
   const v = (name: string, fallback: string) => cs.getPropertyValue(name).trim() || fallback;
   const dark = (el.closest("[data-theme]")?.getAttribute("data-theme") ?? "light") === "dark";
+  // The light theme's semantic tokens are dark (tuned for text contrast); as glowing stars they read
+  // as near-black dots, so the scene uses brighter variants of the same hues on paper.
   return {
     dark,
     node: v("--text-muted", dark ? "#a9b0ab" : "#4b5557"),
     edge: v("--text-faint", "#858e8a"),
     accent: v("--accent", "#e9b65c"),
-    verified: v("--supported", "#52cca4"),
-    flagged: v("--contradicted", "#f2875a"),
-    neutral: v("--unverified", "#9aa5aa"),
+    verified: dark ? v("--supported", "#52cca4") : "#1f9f78",
+    flagged: dark ? v("--contradicted", "#f2875a") : "#e0612f",
+    neutral: dark ? v("--unverified", "#9aa5aa") : "#7d898e",
     sea: v("--sea", "#2f7f7a"),
   };
 }

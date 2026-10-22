@@ -73,7 +73,7 @@ export function Library() {
         {docs.map((d) => {
           const isSel = selected.includes(d.id);
           return (
-            <li key={d.id} className={`doc-row ${isSel ? "is-selected" : ""} status-${d.status}`}>
+            <li key={d.id} className={`doc-row ${isSel ? "is-selected" : ""} doc-${d.status}`}>
               <label className="doc-check">
                 <input
                   type="checkbox"

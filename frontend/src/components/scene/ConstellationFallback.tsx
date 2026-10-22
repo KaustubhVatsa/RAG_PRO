@@ -53,11 +53,11 @@ export function ConstellationFallback({ signal }: { signal: SceneSignal }) {
           const s = litMap.get(i);
           const th = threadSet.get(i);
           const cls = th ? `cs-node is-thread th-${th}` : s !== undefined ? "cs-node is-lit" : "cs-node";
-          const r = 0.022 + p.depth * 0.03 + (s ?? 0) * 0.03 + (th ? 0.02 : 0);
+          const r = 0.016 + p.depth * 0.022 + (s ?? 0) * 0.03 + (th ? 0.02 : 0);
           return (
             <g key={i} className={cls} style={{ ["--d" as string]: `${(i % 9) * 0.4}s` }}>
               {(s !== undefined || th) && <circle className="cs-halo" cx={p.x} cy={p.y} r={r * 3.2} />}
-              <circle cx={p.x} cy={p.y} r={r} opacity={0.35 + p.depth * 0.65} />
+              <circle cx={p.x} cy={p.y} r={r} opacity={s !== undefined || th ? 1 : 0.3 + p.depth * 0.5} />
             </g>
           );
         })}

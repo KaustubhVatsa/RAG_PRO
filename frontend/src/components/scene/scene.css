@@ -28,7 +28,7 @@
   opacity: 0.35;
 }
 .cs-node circle {
-  fill: var(--text-muted);
+  fill: var(--text-faint);
 }
 .cs-node.is-lit circle,
 .cs-node.is-thread circle {

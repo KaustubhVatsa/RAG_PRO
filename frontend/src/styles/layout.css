@@ -221,8 +221,8 @@ main:focus {
   padding: var(--sp-2) var(--sp-1) var(--sp-2) var(--sp-2);
   cursor: pointer;
 }
-.doc-row.status-processing .doc-check,
-.doc-row.status-failed .doc-check {
+.doc-row.doc-processing .doc-check,
+.doc-row.doc-failed .doc-check {
   cursor: default;
 }
 .doc-check input {
