@@ -31,7 +31,7 @@ export default function Constellation({ signal, colors, active, variant }: Props
   return (
     <Canvas
       dpr={[1, 1.75]}
-      frameloop={active ? "always" : "never"}
+      frameloop={active ? "always" : "demand"}
       camera={{ position: [0, 0, variant === "hero" ? 6.4 : 5.6], fov: 42 }}
       gl={{ antialias: true, alpha: true, powerPreference: "low-power" }}
       onCreated={({ gl }) => gl.setClearColor(0x000000, 0)}
@@ -63,13 +63,14 @@ const vertexShader = /* glsl */ `
 
 const fragmentShader = /* glsl */ `
   uniform float uOpacity;
+  uniform float uHaloBase;
   varying vec3 vColor;
   varying float vGlow;
   void main() {
     float d = length(gl_PointCoord - 0.5);
-    float core = smoothstep(0.17, 0.02, d);
+    float core = smoothstep(0.19, 0.07, d);
     float halo = smoothstep(0.5, 0.0, d);
-    halo = halo * halo * (0.18 + vGlow * 0.9);
+    halo = halo * halo * (uHaloBase + vGlow * 0.95);
     float a = clamp(core * (0.55 + vGlow * 0.45) + halo, 0.0, 1.0) * uOpacity;
     if (a < 0.01) discard;
     gl_FragColor = vec4(vColor * (0.9 + vGlow * 0.5), a);
@@ -123,6 +124,7 @@ function Field({ signal, colors, variant }: { signal: SceneSignal; colors: Scene
           uPixelRatio: { value: 1 },
           uScale: { value: 1 },
           uOpacity: { value: 1 },
+          uHaloBase: { value: 0.15 },
         },
       }),
     [],
@@ -131,7 +133,8 @@ function Field({ signal, colors, variant }: { signal: SceneSignal; colors: Scene
   // Additive glow looks magical on dark backgrounds but washes out on paper: switch per theme.
   useEffect(() => {
     nodeMat.blending = colors.dark ? THREE.AdditiveBlending : THREE.NormalBlending;
-    nodeMat.uniforms.uScale.value = (variant === "hero" ? 7.5 : 6.5) * (colors.dark ? 1 : 1.08);
+    nodeMat.uniforms.uScale.value = variant === "hero" ? 17 : 14;
+    nodeMat.uniforms.uHaloBase.value = colors.dark ? 0.15 : 0;
     nodeMat.needsUpdate = true;
   }, [colors.dark, nodeMat, variant]);
 
@@ -153,7 +156,7 @@ function Field({ signal, colors, variant }: { signal: SceneSignal; colors: Scene
   const edgeMat = useMemo(() => new THREE.LineBasicMaterial({ transparent: true, depthWrite: false }), []);
   useEffect(() => {
     edgeMat.color.set(colors.edge);
-    edgeMat.opacity = colors.dark ? 0.16 : 0.2;
+    edgeMat.opacity = colors.dark ? 0.13 : 0.16;
   }, [colors, edgeMat]);
 
   // Threads (core -> cited star). Vertex positions are rewritten each frame as they "grow".

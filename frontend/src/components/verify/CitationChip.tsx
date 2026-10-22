@@ -38,7 +38,10 @@ export function CitationChip({ n, citation, section, onOpen, active }: Props) {
         type="button"
         className={`cite-chip cite-${state} ${active ? "is-active" : ""}`}
         aria-label={label}
-        onClick={() => onOpen?.(citation)}
+        onClick={() => {
+          pop.hide(0); // the source opens in the Evidence panel; the preview is no longer needed
+          onOpen?.(citation);
+        }}
         {...pop.triggerProps}
       >
         <span className="cite-n">{n}</span>

@@ -84,10 +84,7 @@
 }
 .btn-danger {
   background: var(--danger);
-  color: #fff;
-}
-[data-theme="dark"] .btn-danger {
-  color: #1d0d05;
+  color: var(--on-danger);
 }
 .btn-danger:hover:not(:disabled) {
   filter: brightness(1.06);
@@ -609,10 +606,14 @@
 .status-failed {
   color: var(--danger);
 }
+.status-chip {
+  flex-wrap: wrap;
+}
+/* page/passage counts sit on their own line under the status word */
 .status-meta {
+  flex-basis: 100%;
   color: var(--text-faint);
   font-weight: 450;
-  margin-left: 2px;
 }
 .status-spinner {
   width: 10px;

@@ -35,8 +35,9 @@ export function ClaimSpan({ claim, index, revealed, children }: Props) {
         style={{ ["--d" as string]: `${index * 110}ms` }}
         onMouseOver={onMouseOver}
         onMouseLeave={() => pop.hide()}
-        onFocus={pop.triggerProps.onFocus}
-        onBlur={pop.triggerProps.onBlur}
+        // React's onFocus bubbles (focusin): ignore focus landing on a chip inside the claim.
+        onFocus={(e) => e.target === e.currentTarget && pop.show(0)}
+        onBlur={(e) => e.target === e.currentTarget && pop.hide(0)}
         aria-describedby={pop.triggerProps["aria-describedby"]}
       >
         {children}

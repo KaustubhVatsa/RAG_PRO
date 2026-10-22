@@ -993,11 +993,8 @@ main:focus {
   border-color: color-mix(in srgb, var(--accent) 45%, transparent);
 }
 .source-hybrid {
-  color: var(--sea);
+  color: var(--sea-text);
   border-color: color-mix(in srgb, var(--sea) 45%, transparent);
-}
-[data-theme="dark"] .source-hybrid {
-  color: #7cc7c0;
 }
 .score {
   display: flex;
@@ -1147,16 +1144,13 @@ main:focus {
   position: relative;
   padding: var(--sp-6) var(--sp-5) var(--sp-8);
   border-radius: var(--r-md);
-  background: var(--bg-elev);
+  background: var(--paper);
   border: 1px solid var(--border);
   box-shadow: var(--shadow-md);
   font-family: var(--font-display);
   font-size: var(--fs-base);
   line-height: 1.65;
   font-variation-settings: "opsz" 14;
-}
-[data-theme="light"] .paper-page {
-  background: #fffefa;
 }
 .paper-page-num {
   position: absolute;

@@ -9,7 +9,7 @@ export function DocStatusChip({ doc }: { doc: Pick<Document, "status" | "n_chunk
         <IconCheck size={11} strokeWidth={2.4} />
         Ready
         <span className="status-meta">
-          {doc.n_pages} pp · {doc.n_chunks} passages
+          {doc.n_pages} pages · {doc.n_chunks} passages
         </span>
       </span>
     );

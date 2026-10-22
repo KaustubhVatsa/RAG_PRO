@@ -13,8 +13,8 @@
   min-height: 200px;
 }
 /* Dim the white page a little in dark theme so it doesn't glare. */
-[data-theme="dark"] .pdf-page canvas {
-  filter: brightness(0.92) contrast(1.02);
+.pdf-page canvas {
+  filter: var(--canvas-filter);
 }
 .pdf-skeleton {
   position: absolute;

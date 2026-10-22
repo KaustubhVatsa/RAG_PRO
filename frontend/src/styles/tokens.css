@@ -105,6 +105,10 @@
   /* secondary "sea" tone, only used in the aurora + 3D scene for depth */
   --sea: #2f7f7a;
   --sea-soft: rgba(47, 127, 122, 0.22);
+  --sea-text: #7cc7c0;
+  --paper: #10161a;
+  --on-danger: #1d0d05;
+  --canvas-filter: brightness(0.92) contrast(1.02);
 
   /* claim + citation semantics (Okabe-Ito derived: distinguishable with common colour-vision
      deficiencies, and always paired with an icon + underline pattern) */
@@ -162,6 +166,10 @@
 
   --sea: #2c706b;
   --sea-soft: rgba(44, 112, 107, 0.14);
+  --sea-text: #2c706b;
+  --paper: #fffefa;
+  --on-danger: #ffffff;
+  --canvas-filter: none;
 
   --supported: #00775a;
   --supported-soft: rgba(0, 119, 90, 0.1);

@@ -25,6 +25,7 @@ import { CitationChip } from "../components/verify/CitationChip";
 import { ClaimSpan } from "../components/verify/ClaimSpan";
 import { CLAIM_ORDER, ClaimBadge, QuoteBadge } from "../components/verify/meta";
 import * as F from "../lab/fixtures";
+import { renderInline } from "../lib/markdown";
 import type { ChatMode } from "../api/types";
 
 /**
@@ -318,7 +319,7 @@ const SECTIONS: { id: string; title: string; note?: string; render: () => ReactN
             {F.CLAIMS.map((c, i) => (
               <span key={i}>
                 <ClaimSpan claim={c} index={i} revealed>
-                  {c.text.replace(/\s*\[\d+\]\.?$/, ".")}
+                  {renderInline(c.text.replace(/\s*\[\d+\]\.?$/, "."))}
                 </ClaimSpan>{" "}
               </span>
             ))}
