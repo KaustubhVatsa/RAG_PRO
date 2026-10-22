@@ -36,6 +36,8 @@ export interface Citation {
   doc_id: string;
   page: number;
   quote: string;
+  /** true: quote found verbatim in the source; false: NOT found (fabricated/paraphrased); null: no quote given */
+  verified: boolean | null;
 }
 
 export interface Claim {

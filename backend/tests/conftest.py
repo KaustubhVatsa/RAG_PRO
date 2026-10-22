@@ -1,3 +1,18 @@
+"""Test config. Env vars beat .env, so pin every switch to its offline default here:
+the suite must pass on any machine regardless of the developer's local .env (keys, Mongo...)."""
+
+import os
+
+for _k, _v in {
+    "STORE": "memory",
+    "RETRIEVER": "fake",
+    "INGESTOR": "fake",
+    "EMBEDDER": "hash",
+    "LLM_PROVIDER": "mock",
+    "LLM_CACHE": "false",
+}.items():
+    os.environ[_k] = _v
+
 import pytest
 
 from app.dev.fixtures import DEMO_DOC_ID, load_demo

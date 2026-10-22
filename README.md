@@ -41,6 +41,22 @@ Partner: start at **[docs/PARTNER_GUIDE.md](docs/PARTNER_GUIDE.md)**.
 Everyone: **[docs/WORKSTREAMS.md](docs/WORKSTREAMS.md)** (tasks + milestones) and
 **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)**.
 
+## Diagrams
+
+![System overview](docs/diagrams/01-system-overview.svg)
+System overview: who builds what and where the three seams are.
+
+![Answer pipeline](docs/diagrams/02-answer-pipeline.svg)
+How a question becomes a verified answer, step by step.
+
+![Knowledge layer](docs/diagrams/03-knowledge-layer.svg)
+The partner's half: PDF ingestion and hybrid retrieval.
+
+![Work split](docs/diagrams/04-work-split.svg)
+Who builds what, and when, across milestones M0 to M6.
+
+The matching `.excalidraw` files in `docs/diagrams/` open at [excalidraw.com](https://excalidraw.com) (File > Open) for editing.
+
 ## Stack
 
 Python 3.12 + FastAPI · React + Vite + TypeScript · MongoDB (Atlas Vector Search + Atlas Search) ·

@@ -35,3 +35,4 @@ input, select, button { background:var(--panel); color:var(--text); border:1px s
 button { cursor:pointer; background:var(--accent); color:#0b1220; border:0; font-weight:600; }
 button:disabled { opacity:.4; cursor:not-allowed; }
 aside button { width:100%; }
+.cite.bad { background:#3d1a1a; color:var(--bad); }

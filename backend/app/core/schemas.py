@@ -59,6 +59,9 @@ class Citation(BaseModel):
     doc_id: str
     page: int
     quote: str  # exact span from the chunk that backs the claim
+    # True: the model's quote was found verbatim in the chunk. False: it was NOT (fabricated or
+    # paraphrased). None: the model gave no quote, so `quote` is just the start of the chunk.
+    verified: bool | None = None
 
 
 class Claim(BaseModel):
