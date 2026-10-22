@@ -2,11 +2,36 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Verity</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Verity: answers you can check</title>
+    <meta
+      name="description"
+      content="Chat with a paper. Every claim cites a page and an exact quote, every claim is checked, and Verity says so when the paper doesn't."
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#f5f2eb" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0b0f11" media="(prefers-color-scheme: dark)" />
+    <script>
+      // Runs before first paint so the page never flashes the wrong theme.
+      // Order: saved choice (if storage works) -> OS preference -> light.
+      (function () {
+        var theme = null;
+        try {
+          theme = localStorage.getItem("verity-theme");
+        } catch (e) {}
+        if (theme !== "light" && theme !== "dark") {
+          theme =
+            window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light";
+        }
+        document.documentElement.setAttribute("data-theme", theme);
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
+    <noscript>Verity needs JavaScript to run.</noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -1,0 +1,76 @@
+.scene {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 160px;
+}
+.scene canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  animation: scene-in var(--dur-slower) var(--ease-out) both;
+}
+@keyframes scene-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+}
+
+/* ---------------------------------------------------------------- SVG fallback */
+.constellation-svg {
+  width: 100%;
+  height: 100%;
+}
+.cs-edges line {
+  stroke: var(--text-faint);
+  stroke-width: 0.008;
+  opacity: 0.35;
+}
+.cs-node circle {
+  fill: var(--text-faint);
+}
+.cs-node.is-lit circle,
+.cs-node.is-thread circle {
+  fill: var(--accent);
+}
+.cs-node.is-thread.th-verified circle {
+  fill: var(--supported);
+}
+.cs-node.is-thread.th-flagged circle {
+  fill: var(--contradicted);
+}
+.cs-node.is-thread.th-none circle {
+  fill: var(--unverified);
+}
+.cs-node .cs-halo {
+  opacity: 0.18;
+}
+.cs-node.is-lit .cs-halo {
+  animation: cs-twinkle 3.2s var(--ease-in-out) var(--d, 0s) infinite alternate;
+}
+.cs-thread {
+  stroke-width: 0.018;
+  stroke-linecap: round;
+  opacity: 0.85;
+  stroke: var(--unverified);
+}
+.cs-thread.th-verified {
+  stroke: var(--supported);
+}
+.cs-thread.th-flagged {
+  stroke: var(--contradicted);
+  stroke-dasharray: 0.06 0.05;
+}
+.cs-core {
+  fill: var(--accent);
+}
+.cs-core-halo {
+  fill: var(--accent-glow);
+  opacity: 0.5;
+}
+@keyframes cs-twinkle {
+  to {
+    opacity: 0.4;
+  }
+}

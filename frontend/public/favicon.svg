@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- Verity mark: a lens (open ring) with a check whose long stroke leaves the lens and ends on an
+       evidence node. Colours switch with the OS theme. -->
+  <style>
+    .ink { stroke: #1a1f21; }
+    .node { fill: #d99a2c; }
+    @media (prefers-color-scheme: dark) {
+      .ink { stroke: #ece7dc; }
+      .node { fill: #e9b65c; }
+    }
+  </style>
+  <path class="ink" d="M25.46 13.6A11 11 0 1 1 20.16 7.29" stroke-width="3" stroke-linecap="round" />
+  <path class="ink" d="M9.6 17.4l4 4L24.2 9.3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  <circle class="node" cx="26" cy="6.9" r="3" />
+</svg>
