@@ -26,6 +26,7 @@ from app.core.schemas import (
     TokenEvent,
 )
 from app.reasoning.citations import build_citations, split_evidence
+from app.reasoning.confidence import answer_confidence, should_abstain
 from app.reasoning.prompts import ABSTAIN_TEXT, format_context, system_prompt
 from app.reasoning.verifier import verify_claims
 
@@ -73,18 +74,28 @@ def answer_stream(
     # The model ends with an "Evidence:" block of exact quotes; peel it off the visible answer.
     text, quotes = split_evidence(raw)
 
-    abstained = text.startswith(ABSTAIN_TEXT[:20])
-    citations = [] if abstained else build_citations(text, quotes, chunks)
-    claims = [] if abstained else verify_claims(text, citations, chunks, llm)
+    model_abstained = text.startswith(ABSTAIN_TEXT[:20])
+    citations = [] if model_abstained else build_citations(text, quotes, chunks)
+    claims = [] if model_abstained else verify_claims(text, citations, chunks, llm)
     if claims:
         yield ClaimsEvent(claims=claims)
+
+    # R4: after checking every claim, decide whether the answer is fit to show.
+    decision = should_abstain(claims)
+    if model_abstained:
+        reason = "model found no support in the excerpts"
+    else:
+        reason = decision.reason
+    withheld = model_abstained or decision.abstain
     yield DoneEvent(
         answer=Answer(
-            text=text,
+            # a withheld answer is replaced, but its citations/claims stay so the UI can show WHY
+            text=ABSTAIN_TEXT if withheld else text,
             citations=citations,
             claims=claims,
-            abstained=abstained,
-            abstain_reason="model found no support in the excerpts" if abstained else None,
+            abstained=withheld,
+            abstain_reason=reason if withheld else None,
+            confidence=answer_confidence(claims),
             mode=req.mode,
         )
     )
