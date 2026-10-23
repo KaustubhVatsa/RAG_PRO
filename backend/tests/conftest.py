@@ -2,6 +2,7 @@
 the suite must pass on any machine regardless of the developer's local .env (keys, Mongo...)."""
 
 import os
+import tempfile
 
 for _k, _v in {
     "STORE": "memory",
@@ -10,6 +11,8 @@ for _k, _v in {
     "EMBEDDER": "hash",
     "LLM_PROVIDER": "mock",
     "LLM_CACHE": "false",
+    "FILE_STORE": "local",
+    "DATA_DIR": tempfile.mkdtemp(prefix="verity-test-"),
 }.items():
     os.environ[_k] = _v
 

@@ -44,6 +44,9 @@ POST /api/chat                          app/api/chat.py          validates, then
 | `config.py` | All settings from `.env`: implementation switches, per-role model/URL/key/effort/rpm. |
 | `deps.py` | The one place that decides which implementation backs each seam. |
 
+## Storage (`app/storage/`), yours
+`files.py`: where the original PDF bytes live. `FileStore` interface with `LocalFileStore` (a folder) and `GridFSFileStore` (MongoDB GridFS); switch with `FILE_STORE=local|mongo`. The upload route saves the PDF here, the viewer route reads it. Ids are validated so a URL can't escape the folder. See `docs/learning/03-file-storage.md`.
+
 ## API (`app/api/`), yours
 `documents.py` (upload, list, delete, serve PDF, chunks-by-page), `chat.py` (the streaming endpoint), `sse.py` (event framing), `evals.py` (serves eval results to the dashboard), `health.py`.
 

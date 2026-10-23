@@ -11,6 +11,7 @@ from app.knowledge.ingest import build_ingestor
 from app.knowledge.retrieval import build_retriever
 from app.knowledge.stores import build_store
 from app.llm import build_llm
+from app.storage import FileStore, build_file_store
 
 
 @lru_cache
@@ -41,3 +42,8 @@ def get_ingestor() -> Ingestor:
 @lru_cache
 def get_llm() -> LLM:
     return build_llm(get_settings())
+
+
+@lru_cache
+def get_file_store() -> FileStore:
+    return build_file_store(get_settings())

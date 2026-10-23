@@ -24,7 +24,7 @@ knowledge = [
   "pymongo>=4.7",
   "sentence-transformers>=3.0",
 ]
-dev = ["pytest>=8", "ruff>=0.5"]
+dev = ["pytest>=8", "ruff>=0.5", "pymongo>=4.7", "mongomock>=4.1"]
 
 [tool.setuptools.packages.find]
 include = ["app*", "evals*"]
