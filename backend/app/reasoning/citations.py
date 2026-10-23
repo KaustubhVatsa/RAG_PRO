@@ -19,6 +19,15 @@ _EVIDENCE_LINE = re.compile(r'^\s*\[(\d+)\]\s*["“”«](.+?)["“”»]\s*\.?\
 _QUOTE_FALLBACK_CHARS = 240
 
 
+_FANCY_MARKER = re.compile(r"【(\d+)[^】]*】")
+
+
+def normalize_markers(text: str) -> str:
+    """Some models (e.g. gpt-oss) cite as 【1】 or 【1†L5-L9】 instead of [1]. Rewrite to [1] so
+    the rest of the pipeline only ever sees one citation style."""
+    return _FANCY_MARKER.sub(r"[\1]", text)
+
+
 def extract_markers(text: str) -> list[int]:
     """[n] numbers in order of first appearance, de-duplicated."""
     seen: list[int] = []
@@ -35,6 +44,7 @@ def split_evidence(raw: str) -> tuple[str, dict[int, str]]:
     The model was told to end with an "Evidence:" line followed by `[n] "quote"` lines. If the
     marker is missing we return the whole text and no quotes (citations then fall back to
     unverified snippets instead of failing)."""
+    raw = normalize_markers(raw)
     idx = raw.rfind(EVIDENCE_MARKER)
     if idx == -1:
         return raw.strip(), {}

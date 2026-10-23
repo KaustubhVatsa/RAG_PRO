@@ -1,0 +1,336 @@
+{
+  "label": "full_v2",
+  "kind": "answer",
+  "dataset": "demo_v2.jsonl",
+  "models": {
+    "main": "openai/gpt-oss-120b",
+    "judge": "qwen/qwen3.8-27b"
+  },
+  "baseline": {
+    "n": 21,
+    "counts": {
+      "correct": 21
+    },
+    "hallucination_rate": 0.0,
+    "trap_hallucination_rate": 0.0,
+    "answerable_correct_rate": 1.0,
+    "false_refusal_rate": 0.0
+  },
+  "full": {
+    "n": 21,
+    "counts": {
+      "correct": 21
+    },
+    "hallucination_rate": 0.0,
+    "trap_hallucination_rate": 0.0,
+    "answerable_correct_rate": 1.0,
+    "false_refusal_rate": 0.0
+  },
+  "citation_quote_check": {
+    "True": 12
+  },
+  "errors": 0,
+  "rows": [
+    {
+      "id": "a01",
+      "type": "answerable",
+      "question": "How many attention heads does the base Transformer use?",
+      "baseline": "correct",
+      "full": "correct",
+      "withheld_by_checks": false,
+      "confidence": 1.0,
+      "abstain_reason": null,
+      "claims": {
+        "supported": 1
+      },
+      "draft": "The base Transformer uses eight parallel attention heads [1].",
+      "shown": "The base Transformer uses eight parallel attention heads [1]."
+    },
+    {
+      "id": "a02",
+      "type": "answerable",
+      "question": "Why are dot products scaled by the square root of d_k?",
+      "baseline": "correct",
+      "full": "correct",
+      "withheld_by_checks": false,
+      "confidence": 1.0,
+      "abstain_reason": null,
+      "claims": {
+        "supported": 1
+      },
+      "draft": "The dot products are scaled by\u202f\u221ad_k\u202fbecause when the key dimension\u202fd_k\u202fis large, the raw dot\u2011product values become large in magnitude, which pushes the softmax into regions where its gradients are extremely small; scaling mitigates this effect[1].",
+      "shown": "The dot products are scaled by\u202f\u221ad_k\u202fbecause when the key dimension\u202fd_k\u202fis large, the raw dot\u2011product values become large in magnitude, which pushes the softmax into regions where its gradients are extremely small; scaling mitigates this effect[1]."
+    },
+    {
+      "id": "a03",
+      "type": "answerable",
+      "question": "What BLEU score did the big model reach on English-to-German translation?",
+      "baseline": "correct",
+      "full": "correct",
+      "withheld_by_checks": false,
+      "confidence": 1.0,
+      "abstain_reason": null,
+      "claims": {
+        "supported": 1
+      },
+      "draft": "The big model reached a BLEU score of 28.4 on English\u2011to\u2011German translation. [1]",
+      "shown": "The big model reached a BLEU score of 28.4 on English\u2011to\u2011German translation. [1]"
+    },
+    {
+      "id": "a04",
+      "type": "answerable",
+      "question": "How many identical layers does the encoder stack have?",
+      "baseline": "correct",
+      "full": "correct",
+      "withheld_by_checks": false,
+      "confidence": 1.0,
+      "abstain_reason": null,
+      "claims": {
+        "supported": 1
+      },
+      "draft": "The encoder stack consists of\u202fN\u202f=\u202f6 identical layers[1].",
+      "shown": "The encoder stack consists of\u202fN\u202f=\u202f6 identical layers[1]."
+    },
+    {
+      "id": "a05",
+      "type": "answerable",
+      "question": "What is the inner-layer dimensionality of the feed-forward network?",
+      "baseline": "correct",
+      "full": "correct",
+      "withheld_by_checks": false,
+      "confidence": 1.0,
+      "abstain_reason": null,
+      "claims": {
+        "supported": 1
+      },
+      "draft": "The inner-layer dimensionality of the feed\u2011forward network is 2048\u202f[d_ff=2048][1].",
+      "shown": "The inner-layer dimensionality of the feed\u2011forward network is 2048\u202f[d_ff=2048][1]."
+    },
+    {
+      "id": "a06",
+      "type": "answerable",
+      "question": "Which optimizer was used for training, and with what beta values?",
+      "baseline": "correct",
+      "full": "correct",
+      "withheld_by_checks": false,
+      "confidence": 1.0,
+      "abstain_reason": null,
+      "claims": {
+        "supported": 1
+      },
+      "draft": "The training used the Adam optimizer with beta\u202f1\u202f=\u202f0.9 and beta\u202f2\u202f=\u202f0.98. [1]",
+      "shown": "The training used the Adam optimizer with beta\u202f1\u202f=\u202f0.9 and beta\u202f2\u202f=\u202f0.98. [1]"
+    },
+    {
+      "id": "a07",
+      "type": "answerable",
+      "question": "How long were the base models trained and on what hardware?",
+      "baseline": "correct",
+      "full": "correct",
+      "withheld_by_checks": false,
+      "confidence": 1.0,
+      "abstain_reason": null,
+      "claims": {
+        "supported": 1
+      },
+      "draft": "The base models were trained for\u202f100,000\u202fsteps, which took about\u202f12\u202fhours, on a single machine equipped with\u202f8\u202fNVIDIA\u202fP100\u202fGPUs. [1]",
+      "shown": "The base models were trained for\u202f100,000\u202fsteps, which took about\u202f12\u202fhours, on a single machine equipped with\u202f8\u202fNVIDIA\u202fP100\u202fGPUs. [1]"
+    },
+    {
+      "id": "a08",
+      "type": "answerable",
+      "question": "How does the model know the order of tokens, given it has no recurrence?",
+      "baseline": "correct",
+      "full": "correct",
+      "withheld_by_checks": false,
+      "confidence": 1.0,
+      "abstain_reason": null,
+      "claims": {
+        "supported": 1
+      },
+      "draft": "The model encodes token order by adding positional encodings\u2014sine and cosine functions of different frequencies\u2014to the input embeddings, since it has no recurrence or convolution [1].",
+      "shown": "The model encodes token order by adding positional encodings\u2014sine and cosine functions of different frequencies\u2014to the input embeddings, since it has no recurrence or convolution [1]."
+    },
+    {
+      "id": "a09",
+      "type": "answerable",
+      "question": "What dropout rate and label smoothing value were used?",
+      "baseline": "correct",
+      "full": "correct",
+      "withheld_by_checks": false,
+      "confidence": 1.0,
+      "abstain_reason": null,
+      "claims": {
+        "supported": 1
+      },
+      "draft": "The model used a residual dropout rate of\u202f0.1 and label smoothing of\u202f0.1[1].",
+      "shown": "The model used a residual dropout rate of\u202f0.1 and label smoothing of\u202f0.1[1]."
+    },
+    {
+      "id": "a10",
+      "type": "answerable",
+      "question": "What BLEU score did the model achieve on English-to-French?",
+      "baseline": "correct",
+      "full": "correct",
+      "withheld_by_checks": false,
+      "confidence": 1.0,
+      "abstain_reason": null,
+      "claims": {
+        "supported": 1
+      },
+      "draft": "The model achieved a BLEU score of 41.8 on English\u2011to\u2011French. [1]",
+      "shown": "The model achieved a BLEU score of 41.8 on English\u2011to\u2011French. [1]"
+    },
+    {
+      "id": "m01",
+      "type": "multihop",
+      "question": "What is the per-head key dimension and how is it derived?",
+      "baseline": "correct",
+      "full": "correct",
+      "withheld_by_checks": false,
+      "confidence": 1.0,
+      "abstain_reason": null,
+      "claims": {
+        "unverified": 1,
+        "supported": 1
+      },
+      "draft": "The per\u2011head key dimension \\(d_k\\) is 64. It is obtained by dividing the model dimension \\(d_{\\text{model}}\\) by the number of attention heads \\(h\\) (i.e., \\(d_k = d_{\\text{model}}/h = 64\\))[2].",
+      "shown": "The per\u2011head key dimension \\(d_k\\) is 64. It is obtained by dividing the model dimension \\(d_{\\text{model}}\\) by the number of attention heads \\(h\\) (i.e., \\(d_k = d_{\\text{model}}/h = 64\\))[2]."
+    },
+    {
+      "id": "m02",
+      "type": "multihop",
+      "question": "Given d_model and the number of heads in the base model, what are d_model and d_k?",
+      "baseline": "correct",
+      "full": "correct",
+      "withheld_by_checks": false,
+      "confidence": null,
+      "abstain_reason": null,
+      "claims": {
+        "unverified": 1
+      },
+      "draft": "The base model has a model dimension d_model\u202f=\u202f512, and each attention head uses a key (and value) dimension d_k\u202f=\u202f64.",
+      "shown": "The base model has a model dimension d_model\u202f=\u202f512, and each attention head uses a key (and value) dimension d_k\u202f=\u202f64."
+    },
+    {
+      "id": "u01",
+      "type": "unanswerable",
+      "question": "Which dataset was used for the image classification experiments?",
+      "baseline": "correct",
+      "full": "correct",
+      "withheld_by_checks": false,
+      "confidence": null,
+      "abstain_reason": "model found no support in the excerpts",
+      "claims": {},
+      "draft": "I can't find this in the provided document(s).",
+      "shown": "I can't find this in the provided document(s)."
+    },
+    {
+      "id": "u02",
+      "type": "unanswerable",
+      "question": "What was the carbon footprint of training the model?",
+      "baseline": "correct",
+      "full": "correct",
+      "withheld_by_checks": false,
+      "confidence": null,
+      "abstain_reason": "model found no support in the excerpts",
+      "claims": {},
+      "draft": "I can't find this in the provided document(s).",
+      "shown": "I can't find this in the provided document(s)."
+    },
+    {
+      "id": "u03",
+      "type": "unanswerable",
+      "question": "What was the peak learning rate value reached after warmup?",
+      "baseline": "correct",
+      "full": "correct",
+      "withheld_by_checks": false,
+      "confidence": null,
+      "abstain_reason": "model found no support in the excerpts",
+      "claims": {},
+      "draft": "I can't find this in the provided document(s).",
+      "shown": "I can't find this in the provided document(s)."
+    },
+    {
+      "id": "u04",
+      "type": "unanswerable",
+      "question": "Which organization funded this research?",
+      "baseline": "correct",
+      "full": "correct",
+      "withheld_by_checks": false,
+      "confidence": null,
+      "abstain_reason": "no relevant passages retrieved",
+      "claims": {},
+      "draft": "I can't find this in the provided document(s).",
+      "shown": "I can't find this in the provided document(s)."
+    },
+    {
+      "id": "u05",
+      "type": "unanswerable",
+      "question": "Which programming framework was the model implemented in?",
+      "baseline": "correct",
+      "full": "correct",
+      "withheld_by_checks": false,
+      "confidence": null,
+      "abstain_reason": "model found no support in the excerpts",
+      "claims": {},
+      "draft": "I can't find this in the provided document(s).",
+      "shown": "I can't find this in the provided document(s)."
+    },
+    {
+      "id": "f01",
+      "type": "false_premise",
+      "question": "Why did the Transformer use LSTM layers in its encoder?",
+      "baseline": "correct",
+      "full": "correct",
+      "withheld_by_checks": false,
+      "confidence": null,
+      "abstain_reason": "model found no support in the excerpts",
+      "claims": {},
+      "draft": "I can't find this in the provided document(s).",
+      "shown": "I can't find this in the provided document(s)."
+    },
+    {
+      "id": "f02",
+      "type": "false_premise",
+      "question": "Why did the authors use convolutional layers in the decoder?",
+      "baseline": "correct",
+      "full": "correct",
+      "withheld_by_checks": false,
+      "confidence": null,
+      "abstain_reason": "model found no support in the excerpts",
+      "claims": {},
+      "draft": "I can't find this in the provided document(s).",
+      "shown": "I can't find this in the provided document(s)."
+    },
+    {
+      "id": "f03",
+      "type": "false_premise",
+      "question": "Why did the base model use 12 attention heads?",
+      "baseline": "correct",
+      "full": "correct",
+      "withheld_by_checks": false,
+      "confidence": 1.0,
+      "abstain_reason": null,
+      "claims": {
+        "supported": 1
+      },
+      "draft": "The document states that the base Transformer model uses eight parallel attention heads, not twelve\u202f[1].",
+      "shown": "The document states that the base Transformer model uses eight parallel attention heads, not twelve\u202f[1]."
+    },
+    {
+      "id": "f04",
+      "type": "false_premise",
+      "question": "Why was the model trained on the WMT 2016 English-German dataset?",
+      "baseline": "correct",
+      "full": "correct",
+      "withheld_by_checks": false,
+      "confidence": null,
+      "abstain_reason": "model found no support in the excerpts",
+      "claims": {},
+      "draft": "I can't find this in the provided document(s).",
+      "shown": "I can't find this in the provided document(s)."
+    }
+  ],
+  "created_at": "2026-10-22T20:45:08.274727+00:00"
+}

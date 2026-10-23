@@ -1,0 +1,30 @@
+{"id": "s01", "label": "supported", "evidence": [4], "claim": "The base model runs eight attention heads in parallel."}
+{"id": "s02", "label": "supported", "evidence": [4], "claim": "Each head works with 64-dimensional keys and values."}
+{"id": "s03", "label": "supported", "evidence": [2], "claim": "The encoder and decoder each consist of six identical layers."}
+{"id": "s04", "label": "supported", "evidence": [3], "claim": "Dot products are divided by the square root of d_k before the softmax."}
+{"id": "s05", "label": "supported", "evidence": [9], "claim": "The learning rate rises during the first 4000 steps and then falls."}
+{"id": "s06", "label": "supported", "evidence": [8], "claim": "The base models trained for about half a day on 8 GPUs."}
+{"id": "s07", "label": "supported", "evidence": [10], "claim": "The big Transformer beat the earlier best English-to-German results by more than 2 BLEU."}
+{"id": "s08", "label": "supported", "evidence": [6], "claim": "Token order information comes from sinusoidal functions added to the embeddings."}
+{"id": "s09", "label": "supported", "evidence": [0], "claim": "The Transformer does not use recurrence or convolutions."}
+{"id": "s10", "label": "supported", "evidence": [7], "claim": "Self-attention connects every position with a constant number of sequential operations."}
+{"id": "c01", "label": "contradicted", "evidence": [4], "claim": "The base model uses 16 attention heads."}
+{"id": "c02", "label": "contradicted", "evidence": [2], "claim": "The encoder stack has 12 layers."}
+{"id": "c03", "label": "contradicted", "evidence": [5], "claim": "The feed-forward inner layer has dimensionality 1024."}
+{"id": "c04", "label": "contradicted", "evidence": [9], "claim": "The optimizer was SGD with momentum."}
+{"id": "c05", "label": "contradicted", "evidence": [8], "claim": "The big models were trained for only 12 hours."}
+{"id": "c06", "label": "contradicted", "evidence": [10], "claim": "The big Transformer reached 31.2 BLEU on English-to-German."}
+{"id": "c07", "label": "contradicted", "evidence": [0], "claim": "The Transformer relies mainly on recurrent layers."}
+{"id": "c08", "label": "contradicted", "evidence": [9], "claim": "A dropout rate of 0.5 was applied."}
+{"id": "c09", "label": "contradicted", "evidence": [6], "claim": "The model contains no information about token order at all."}
+{"id": "c10", "label": "contradicted", "evidence": [3], "claim": "The scores are multiplied by the square root of d_k instead of divided."}
+{"id": "u01", "label": "unsupported", "evidence": [4], "claim": "The big model uses 16 attention heads."}
+{"id": "u02", "label": "unsupported", "evidence": [8], "claim": "Training used mixed-precision arithmetic."}
+{"id": "u03", "label": "unsupported", "evidence": [10], "claim": "The model was also evaluated on English-to-Czech translation."}
+{"id": "u04", "label": "unsupported", "evidence": [9], "claim": "The peak learning rate was 0.001."}
+{"id": "u05", "label": "unsupported", "evidence": [2], "claim": "Each layer was trained with a different learning rate."}
+{"id": "u06", "label": "unsupported", "evidence": [5], "claim": "The feed-forward network holds most of the model's parameters."}
+{"id": "u07", "label": "unsupported", "evidence": [8], "claim": "The training data was filtered to remove duplicate sentence pairs."}
+{"id": "u08", "label": "unsupported", "evidence": [3], "claim": "Attention weights are visualised in Figure 3 of the paper."}
+{"id": "u09", "label": "unsupported", "evidence": [0], "claim": "The model was developed at Google Brain."}
+{"id": "u10", "label": "unsupported", "evidence": [1], "claim": "Convolutional models need a number of operations that grows linearly with distance."}
