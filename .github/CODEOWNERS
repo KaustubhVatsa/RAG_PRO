@@ -4,6 +4,7 @@
 
 /frontend/                                @YOU
 /backend/app/api/                         @YOU
+/backend/app/storage/                     @YOU
 /backend/app/reasoning/                   @YOU
 /backend/evals/answer_eval.py             @YOU
 /backend/tests/test_agent.py              @YOU

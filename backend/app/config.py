@@ -20,6 +20,7 @@ class Settings(BaseSettings):
     ingestor: Literal["fake", "real"] = "fake"
     embedder: Literal["hash", "bge"] = "hash"
     llm_provider: Literal["mock", "openai_compat"] = "mock"
+    file_store: Literal["local", "mongo"] = "local"  # where the original PDFs are kept
 
     # --- mongo
     mongo_uri: str = "mongodb://localhost:27017/?directConnection=true"
