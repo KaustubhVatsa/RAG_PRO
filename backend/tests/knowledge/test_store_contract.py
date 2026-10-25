@@ -3,6 +3,7 @@ MONGO_TEST_URI is set (e.g. after `make db`:  MONGO_TEST_URI='mongodb://localhos
 PARTNER P5: make the Mongo variant pass; every assertion here is the spec."""
 
 import os
+import time
 import uuid
 
 import pytest
@@ -53,6 +54,19 @@ def _seed(store):
     return emb
 
 
+def _wait_for_search_indexing(store, embedding, query, doc_ids):
+    if isinstance(store, MemoryStore):
+        return
+    deadline = time.monotonic() + 15
+    while time.monotonic() < deadline:
+        vector_hits = store.vector_search(embedding, doc_ids, k=1)
+        text_hits = store.text_search(query, doc_ids, k=1)
+        if vector_hits and text_hits:
+            return
+        time.sleep(0.25)
+    raise AssertionError("Atlas Search indexes did not include the upserted chunks in time")
+
+
 def test_document_crud(fresh):
     _seed(fresh)
     assert fresh.get_document("d1").title == "T"
@@ -63,7 +77,9 @@ def test_document_crud(fresh):
 
 def test_vector_and_text_search_agree_on_the_obvious_hit(fresh):
     emb = _seed(fresh)
-    v = fresh.vector_search(emb.embed_query("how many attention heads"), ["d1"], k=1)
+    query_embedding = emb.embed_query("how many attention heads")
+    _wait_for_search_indexing(fresh, query_embedding, "attention heads", ["d1"])
+    v = fresh.vector_search(query_embedding, ["d1"], k=1)
     t = fresh.text_search("attention heads", ["d1"], k=1)
     assert v[0].chunk.id == t[0].chunk.id == "d1:0"
     assert v[0].source == "vector" and t[0].source == "bm25"
