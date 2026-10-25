@@ -1,13 +1,7 @@
 """PARTNER spec for P3. Remove the xfail marker once chunk_pages is implemented."""
 
-import pytest
-
 from app.knowledge.ingest.chunk import chunk_pages, count_tokens
 from app.knowledge.ingest.types import Block, ParsedPage
-
-pytestmark = pytest.mark.xfail(
-    raises=NotImplementedError, reason="P3 not implemented", strict=False
-)
 
 PARA = " ".join(f"word{i}" for i in range(120))  # ~156 tokens
 
@@ -63,3 +57,13 @@ def test_consecutive_chunks_in_a_section_overlap():
 def test_no_empty_chunks_and_no_embeddings_yet():
     chunks = chunk_pages(_pages(), "d")
     assert all(c.text.strip() and c.embedding is None for c in chunks)
+
+
+def test_oversized_paragraph_is_split_under_token_limit():
+    text = " ".join(f"Sentence{i}." for i in range(80))
+    pages = [ParsedPage(page=3, blocks=[Block(text=text)])]
+
+    chunks = chunk_pages(pages, "long", max_tokens=30, overlap_tokens=0)
+
+    assert len(chunks) > 1
+    assert all(count_tokens(chunk.text) <= 30 for chunk in chunks)
