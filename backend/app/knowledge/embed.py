@@ -16,16 +16,45 @@ from app.core.interfaces import Embedder
 
 
 class SentenceTransformerEmbedder:
-    def __init__(self, model_name: str = "BAAI/bge-small-en-v1.5"):
-        self.model_name = model_name
-        self.dim = 384  # TODO: read from the model instead of hard-coding
-        raise NotImplementedError("P4: load the sentence-transformers model")
+      query_prefix = "Represent this sentence for searching relevant passages: "
 
-    def embed_documents(self, texts: list[str]) -> list[list[float]]:
-        raise NotImplementedError("P4")
+      def __init__(self, model_name: str = "BAAI/bge-small-en-v1.5", batch_size: int = 32):
+          if batch_size < 1:
+              raise ValueError("batch_size must be positive")
 
-    def embed_query(self, text: str) -> list[float]:
-        raise NotImplementedError("P4")
+          from sentence_transformers import SentenceTransformer
+
+          self.model_name = model_name
+          self.batch_size = batch_size
+          self.model = SentenceTransformer(model_name)
+          get_dimension = getattr(self.model, "get_embedding_dimension", None)
+          if get_dimension is None:
+              get_dimension = self.model.get_sentence_embedding_dimension
+          dim = get_dimension()
+          if dim is None:
+              raise ValueError(f"Could not determine embedding dimension for {model_name}")
+          self.dim = dim
+
+      def embed_documents(self, texts: list[str]) -> list[list[float]]:
+          if not texts:
+              return []
+          vectors = self.model.encode(
+              texts,
+              batch_size=self.batch_size,
+              convert_to_numpy=True,
+              normalize_embeddings=True,
+              show_progress_bar=False,
+          )
+          return vectors.tolist()
+
+      def embed_query(self, text: str) -> list[float]:
+          vector = self.model.encode(
+              f"{self.query_prefix}{text}",
+              convert_to_numpy=True,
+              normalize_embeddings=True,
+              show_progress_bar=False,
+          )
+          return vector.tolist()
 
 
 def build_embedder(settings: Settings) -> Embedder:
